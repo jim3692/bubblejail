@@ -1,0 +1,22 @@
+diff --git a/tools/jinja2_run.py b/tools/jinja2_run.py
+index 380bc50..25e5464 100644
+--- a/tools/jinja2_run.py
++++ b/tools/jinja2_run.py
+@@ -7,6 +7,8 @@ from argparse import ArgumentParser
+ from pathlib import Path
+ from sys import stdout
+ 
++import os
++
+ from jinja2 import Environment, FileSystemLoader, StrictUndefined
+ 
+ 
+@@ -16,6 +18,8 @@ def execute_template(
+     template_name: str,
+ ) -> None:
+     define_dict = {x[0]: x[1] for x in define}
++    define_dict["LIB_PREFIX"] = f"{os.environ["out"]}/lib/python{os.environ["pythonVersion"]}/site-packages/.bubblejail.mesonpy.libs"
++    define_dict["SHARE_PREFIX"] = f"{os.environ["out"]}/share"
+ 
+     env = Environment(
+         loader=FileSystemLoader(template_dir),

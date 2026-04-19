@@ -1,0 +1,41 @@
+diff --git a/src/bubblejail/services.py b/src/bubblejail/services.py
+index 6dc3f94..86b1b74 100644
+--- a/src/bubblejail/services.py
++++ b/src/bubblejail/services.py
+@@ -15,7 +15,7 @@ from enum import IntFlag
+ from enum import auto as enum_auto
+ from functools import cache
+ from multiprocessing import Process
+-from os import O_CLOEXEC, O_NONBLOCK, environ, getpid, getuid, pipe2, readlink
++from os import O_CLOEXEC, O_NONBLOCK, environ, getpid, getuid, path, pipe2, readlink
+ from pathlib import Path
+ from shutil import which
+ from sys import stderr
+@@ -116,14 +116,7 @@ XDG_DESKTOP_VARS: frozenset[str] = frozenset(
+ 
+ 
+ def generate_path_var() -> str:
+-    """Filters PATH variable to locations with /usr prefix"""
+-
+-    # Split by semicolon
+-    paths = environ["PATH"].split(":")
+-    # Filter by /usr and /tmp then join by semicolon
+-    return ":".join(
+-        filter(lambda s: s.startswith("/usr/") or s == "/bin" or s == "/sbin", paths)
+-    )
++    return environ["PATH"]
+ 
+ 
+ def generate_toolkits() -> Generator[ServiceIterTypes, None, None]:
+@@ -184,6 +177,11 @@ class BubblejailDefaults(BubblejailService):
+         # Distro packaged libraries and binaries
+         yield ReadOnlyBind("/usr")
+         yield ReadOnlyBind("/opt")
++        yield ReadOnlyBind("/nix")
++        if environ.get("NIX_PROFILES") is not None:
++            for profile_path in environ.get("NIX_PROFILES").split(" "):
++                if path.exists(f"{profile_path}/bin"):
++                    yield ReadOnlyBind(f"{profile_path}/bin")
+         # Recreate symlinks in / or mount them read-only if its not a symlink.
+         # Should be portable between distros.
+         for root_path in Path("/").iterdir():

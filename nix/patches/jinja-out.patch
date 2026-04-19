@@ -1,0 +1,20 @@
+diff --git a/templates/bubblejail_launch_base.py.jinja b/templates/bubblejail_launch_base.py.jinja
+index af91508..1696842 100644
+--- a/templates/bubblejail_launch_base.py.jinja
++++ b/templates/bubblejail_launch_base.py.jinja
+@@ -4,12 +4,12 @@
+ from __future__ import annotations
+ 
+ if __name__ == "__main__":
+-    {% if PYTHON_PACKAGES_DIR is defined %}
+     from sys import path
+-
++    {% if PYTHON_PACKAGES_DIR is defined %}
+     path.append("{{ PYTHON_PACKAGES_DIR }}")
+-
+     {% endif %}
++    path.append("@OUT@")
++
+     from bubblejail.bubblejail_utils import BubblejailSettings
+ 
+     BubblejailSettings.HELPER_PATH_STR = "{{ LIB_PREFIX }}/bubblejail/bubblejail-helper"

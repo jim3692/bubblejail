@@ -1,0 +1,16 @@
+diff --git a/meson.build b/meson.build
+index ad820f5..c000d5d 100644
+--- a/meson.build
++++ b/meson.build
+@@ -4,11 +4,6 @@ project(
+     'bubblejail',
+     version: '0.10.2',
+     meson_version: '>=1.3.0',
+-    # Patch out these lines to install bubblejail's packages to site-packages
+-    default_options: {
+-        'python.purelibdir': 'lib/bubblejail/python-packages',
+-        'python.platlibdir': 'lib/bubblejail/python-packages',
+-    },
+ )
+ 
+ fs = import('fs')
